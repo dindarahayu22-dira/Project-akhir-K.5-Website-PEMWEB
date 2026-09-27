@@ -6,6 +6,6 @@ Anggota:
 Siti Kamila Nurhaliza - 255150601111033 - Inisial SK
 Dinda Rahayu Agustina - 255150601111034 - Inisial DR
 Louisa Safina Permata Citra - 255150601111031- Inisial LS 
-Khaizuran Rafie Safaraz - NIM - KR 
+Khaizuran Rafie Safaraz - 255150600111009 - KR 
 Petra Kanisia Braniva -  255150619111002 - Inisial PK
-Billqisthi Albar Haprabu - NIM - BA
+Billqisthi Albar Haprabu - 255150607111033 - BA
