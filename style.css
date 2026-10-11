@@ -1,0 +1,484 @@
+
+/* ==========================================
+   1. VARIABEL WARNA DAN PENGATURAN UMUM
+   Digunakan oleh semua halaman
+========================================== */
+:root{
+  --o:#ff6a1a;
+  --o2:#ff8a3d;
+  --soft:#fff3ea;
+  --ink:#2b2b33;
+  --mut:#8a8a96;
+  --line:#ececf1;
+  --bg:#fafafb
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:"Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;
+  color:var(--ink);
+  background:var(--bg)
+}
+
+a{color:var(--o);text-decoration:none}
+
+h1{font-size:1.35rem;margin:0 0 .4rem}
+h2{font-size:1.05rem;margin:0}
+h3{font-size:.95rem;margin:.6rem 0 .2rem}
+
+.muted{color:var(--mut)}
+.small{font-size:.8rem}
+.center{text-align:center}
+
+
+/* ==========================================
+   2. LOGO
+   Digunakan pada Login, Register, dan Home
+========================================== */
+.logo{
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  font-weight:800;
+  font-size:1.3rem;
+  color:var(--o)
+}
+
+.logo-icon{
+  background:var(--o);
+  color:#fff;
+  border-radius:8px;
+  padding:.15rem .35rem;
+  font-size:1rem
+}
+
+
+/* ==========================================
+   3. FORM DAN INPUT UMUM
+   Digunakan pada Login, Register, dan Profil
+========================================== */
+input[type=text],
+input[type=email],
+input[type=password],
+input[type=search]{
+  width:100%;
+  padding:.7rem .85rem;
+  border:1px solid var(--line);
+  border-radius:8px;
+  font:inherit;
+  font-size:.9rem;
+  background:#fff
+}
+
+input:focus{
+  outline:2px solid var(--o2);
+  border-color:transparent
+}
+
+form{
+  display:flex;
+  flex-direction:column;
+  gap:.8rem;
+  margin-top:1rem
+}
+
+/* Posisi kolom password */
+.pass{position:relative}
+.pass input{padding-right:2.5rem}
+
+/* Tombol untuk menampilkan password */
+.eye{
+  position:absolute;
+  right:.5rem;
+  top:50%;
+  transform:translateY(-50%);
+  border:0;
+  background:none;
+  cursor:pointer;
+  opacity:.6
+}
+
+/* Baris horizontal untuk teks atau tombol */
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:.8rem;
+  gap:.5rem
+}
+
+
+/* ==========================================
+   4. TOMBOL DAN PESAN
+   Digunakan pada semua halaman
+========================================== */
+.btn{
+  display:inline-block;
+  text-align:center;
+  border:0;
+  cursor:pointer;
+  background:var(--o);
+  color:#fff;
+  padding:.75rem 1.2rem;
+  border-radius:8px;
+  font:inherit;
+  font-weight:700;
+  font-size:.9rem
+}
+
+.btn:hover{background:#e85a0c}
+
+.btn-white{
+  background:#fff;
+  color:var(--o);
+  padding:.5rem 1rem;
+  font-size:.8rem
+}
+
+.btn-ghost{
+  background:#fff;
+  color:var(--ink);
+  border:1px solid var(--line)
+}
+
+/* Pesan error */
+.alert{
+  background:#fee;
+  border:1px solid #fbb;
+  color:#b00;
+  padding:.6rem .8rem;
+  border-radius:8px;
+  font-size:.82rem;
+  margin-top:.6rem
+}
+
+/* Pesan berhasil */
+.alert.ok{
+  background:#eafaf0;
+  border-color:#a8e6bf;
+  color:#18794e
+}
+
+
+/* ==========================================
+   5. HALAMAN LOGIN
+========================================== */
+
+/* Tinggi halaman autentikasi */
+.auth{min-height:100vh}
+
+/* Layout dua kolom Login */
+.auth-split{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  background:linear-gradient(135deg,var(--soft),#ffe3d0)
+}
+
+/* Bagian ilustrasi dan teks */
+.auth-hero{
+  padding:3rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:1rem;
+  text-align:center
+}
+
+/* Ilustrasi Login */
+.hero-art{
+  font-size:4rem;
+  letter-spacing:.5rem
+}
+
+/* Kotak form Login */
+.auth-card{
+  background:#fff;
+  border-radius:14px;
+  padding:2rem;
+  box-shadow:0 10px 30px rgba(255,106,26,.12);
+  max-width:400px;
+  width:100%;
+  margin:1rem auto
+}
+
+
+/* ==========================================
+   6. HALAMAN REGISTER
+========================================== */
+
+/* Kotak form Register yang lebih lebar */
+.auth-card.wide{max-width:440px}
+
+/* Layout Register yang berada di tengah */
+.auth-center{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:1rem;
+  background:linear-gradient(180deg,var(--soft),#fff);
+  padding:2rem 1rem
+}
+
+
+/* ==========================================
+   7. HALAMAN HOME / DASHBOARD
+========================================== */
+
+/* Navigasi bagian atas */
+.topbar{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  padding:.7rem 1.4rem;
+  background:#fff;
+  border-bottom:1px solid var(--line)
+}
+
+/* Kolom pencarian */
+.search{
+  max-width:460px;
+  margin:0 auto 0 2rem;
+  background:var(--bg)!important
+}
+
+/* Ikon notifikasi */
+.bell{cursor:pointer}
+
+/* Avatar pengguna di navigasi */
+.avatar{
+  display:inline-grid;
+  place-items:center;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:var(--o);
+  color:#fff;
+  font-weight:700
+}
+
+/* Layout sidebar dan konten */
+.body{
+  display:grid;
+  grid-template-columns:200px 1fr;
+  min-height:calc(100vh - 58px)
+}
+
+/* Sidebar navigasi */
+.sidebar{
+  background:#fff;
+  border-right:1px solid var(--line);
+  padding:1rem .7rem;
+  display:flex;
+  flex-direction:column;
+  gap:.2rem
+}
+
+/* Link menu sidebar */
+.sidebar a{
+  display:flex;
+  gap:.6rem;
+  align-items:center;
+  padding:.6rem .8rem;
+  border-radius:8px;
+  color:var(--ink);
+  font-size:.88rem
+}
+
+/* Efek saat menu diarahkan kursor */
+.sidebar a:hover{background:var(--soft)}
+
+/* Penanda menu yang sedang aktif */
+.sidebar a.active{
+  background:var(--o);
+  color:#fff
+}
+
+/* Tombol Logout */
+.sidebar .logout{
+  margin-top:auto;
+  color:#c33
+}
+
+/* Area konten utama Home */
+.content{
+  padding:1.5rem;
+  max-width:1000px
+}
+
+/* Banner sambutan Home */
+.banner{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:linear-gradient(120deg,var(--o),var(--o2));
+  color:#fff;
+  border-radius:14px;
+  padding:1.5rem 2rem;
+  margin-bottom:1.5rem
+}
+
+/* Judul banner */
+.banner h1{
+  font-size:1.5rem;
+  line-height:1.3;
+  margin-bottom:1rem
+}
+
+/* Ilustrasi banner */
+.banner-art{font-size:3.5rem}
+
+/* Judul bagian, seperti Menu Populer */
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:1.2rem 0 .7rem
+}
+
+.section-head a{font-size:.8rem}
+
+/* Grid kartu menu dan kantin */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1rem
+}
+
+.grid-5{grid-template-columns:repeat(5,1fr)}
+
+/* Kartu menu makanan atau kantin */
+.card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:.7rem
+}
+
+/* Area gambar atau ikon makanan */
+.thumb{
+  height:100px;
+  display:grid;
+  place-items:center;
+  font-size:2.8rem;
+  background:var(--soft);
+  border-radius:8px
+}
+
+/* Thumbnail berukuran kecil */
+.small-thumb{
+  height:70px;
+  font-size:2rem
+}
+
+/* Harga menu */
+.price{
+  color:var(--o);
+  font-weight:700;
+  font-size:.85rem;
+  margin:0
+}
+
+
+/* ==========================================
+   8. HALAMAN PROFIL
+========================================== */
+
+/* Panel informasi profil */
+.panel{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:1.5rem;
+  max-width:620px
+}
+
+/* Bagian avatar dan nama pengguna */
+.profile-head{
+  display:flex;
+  gap:1rem;
+  align-items:center;
+  margin-bottom:1rem
+}
+
+/* Avatar profil berukuran besar */
+.avatar.big{
+  width:72px;
+  height:72px;
+  font-size:1.8rem
+}
+
+/* Baris informasi akun */
+.info div{
+  display:flex;
+  justify-content:space-between;
+  padding:.7rem 0;
+  border-bottom:1px solid var(--line);
+  font-size:.88rem
+}
+
+/* Label informasi profil */
+.info dt{color:var(--mut)}
+
+/* Isi informasi profil */
+.info dd{
+  margin:0;
+  font-weight:600
+}
+
+/* Tombol edit profil */
+.info+.btn{
+  margin-top:1.2rem;
+  width:100%
+}
+
+/* Form edit profil */
+.info-form label{
+  font-size:.8rem;
+  color:var(--mut);
+  display:flex;
+  flex-direction:column;
+  gap:.3rem
+}
+
+/* Posisi tombol form profil */
+.info-form .row{justify-content:flex-end}
+
+
+/* ==========================================
+   9. RESPONSIVE / TAMPILAN HP
+   Mengatur Login, Register, Home, dan Profil
+========================================== */
+@media(max-width:800px){
+
+  /* Login dan Register menjadi satu kolom */
+  .auth-split{grid-template-columns:1fr}
+
+  .auth-hero{padding:1.5rem 1rem 0}
+
+  /* Sidebar menjadi navigasi horizontal */
+  .body{grid-template-columns:1fr}
+
+  .sidebar{
+    flex-direction:row;
+    overflow-x:auto;
+    border-right:0;
+    border-bottom:1px solid var(--line)
+  }
+
+  .sidebar a{white-space:nowrap}
+
+  .sidebar .logout{margin-top:0}
+
+  /* Kartu menu menjadi dua kolom */
+  .grid,.grid-5{grid-template-columns:repeat(2,1fr)}
+
+  /* Sembunyikan ilustrasi banner dan pencarian di HP */
+  .banner-art{display:none}
+  .search{display:none}
+
+  .topbar{justify-content:space-between}
+}

@@ -1,0 +1,11 @@
+[
+    {
+        "nama": "rara",
+        "nim": "123456789",
+        "email": "rara@gmail.com",
+        "hp": "081234567891",
+        "status": "Mahasiswa",
+        "password": "$2y$10$QryfOkpKcuOrX5VXo6A0DOZIFH\/keIx9wUEb4Y93y4HzUNxEfSo5u",
+        "created_at": "2026-10-10T12:16:07+02:00"
+    }
+]
