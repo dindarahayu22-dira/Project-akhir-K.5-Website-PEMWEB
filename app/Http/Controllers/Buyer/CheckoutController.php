@@ -11,36 +11,140 @@ use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
-    private const SLOTS = ['10:00'=>'Pagi','12:30'=>'Sesuai Istirahat','15:00'=>'Sore'];
     public function index(CartService $service)
     {
-        $cart=$service->cartFor(auth()->user())->load('tenant','items.menu.tenant');
-        if ($cart->items->isEmpty()) return redirect()->route('buyer.cart.index')->with('status','Keranjang masih kosong. Tambahkan menu terlebih dahulu.');
-        return view('buyer.checkout.index',['active'=>'Pesanan','cart'=>$cart,'slots'=>self::SLOTS]);
+        $cart = $service->cartFor(auth()->user())
+            ->load('tenant', 'items.menu.tenant');
+
+        if ($cart->items->isEmpty()) {
+            return redirect()
+                ->route('buyer.cart.index')
+                ->with('status', 'Keranjang masih kosong. Tambahkan menu terlebih dahulu.');
+        }
+
+        return view('buyer.checkout.index', [
+            'active' => 'Pesanan',
+            'cart' => $cart,
+        ]);
     }
+
     public function store(Request $request, CartService $service)
     {
-        $data=$request->validate(['pickup_time'=>['required','in:'.implode(',',array_keys(self::SLOTS))],'note'=>['nullable','string','max:150']]);
-        $user=auth()->user();
-        $cart=$service->cartFor($user)->load('tenant','items.menu.tenant');
-        abort_if($cart->items->isEmpty() || !$cart->tenant_id,422,'Keranjang kosong.');
-        $order=DB::transaction(function () use ($cart,$data,$user) {
-            $tenant=$cart->tenant()->lockForUpdate()->first();
-            abort_unless($tenant && $tenant->status==='open',422,'Kantin sedang tutup.');
-            $locked=[]; $total=0;
+        $data = $request->validate([
+            'note' => ['nullable', 'string', 'max:150'],
+        ]);
+
+        $user = auth()->user();
+
+        $cart = $service->cartFor($user)
+            ->load('tenant', 'items.menu.tenant');
+
+        abort_if(
+            $cart->items->isEmpty() || !$cart->tenant_id,
+            422,
+            'Keranjang kosong.'
+        );
+
+        $order = DB::transaction(function () use ($cart, $data, $user) {
+            $tenant = $cart->tenant()->lockForUpdate()->first();
+
+            abort_unless(
+                $tenant && $tenant->status === 'open',
+                422,
+                'Kantin sedang tutup.'
+            );
+
+            $locked = [];
+            $total = 0;
+
             foreach ($cart->items as $item) {
-                $menu=$item->menu_id ? $item->menu()->lockForUpdate()->first() : null;
-                abort_unless($menu && $menu->tenant_id===$tenant->id && $menu->status==='available' && $menu->stock >= $item->quantity,422,'Ada menu yang tidak tersedia atau stoknya kurang.');
-                $locked[]=['cart_item'=>$item,'menu'=>$menu]; $total += (int)$menu->price*(int)$item->quantity;
+                $menu = $item->menu_id
+                    ? $item->menu()->lockForUpdate()->first()
+                    : null;
+
+                abort_unless(
+                    $menu &&
+                    $menu->tenant_id == $tenant->id &&
+                    $menu->status === 'available' &&
+                    $menu->stock >= $item->quantity,
+                    422,
+                    'Ada menu yang tidak tersedia atau stoknya kurang.'
+                );
+
+                $locked[] = [
+                    'cart_item' => $item,
+                    'menu' => $menu,
+                ];
+
+                $total += (int) $menu->price * (int) $item->quantity;
             }
-            $order=Order::create(['order_number'=>'KG'.now()->format('ymdHis').random_int(100,999),'user_id'=>$user->id,'tenant_id'=>$tenant->id,'total'=>$total,'status'=>'new','pickup_time'=>$data['pickup_time'],'pickup_code'=>strtoupper(substr(preg_replace('/\W/','',$tenant->name),-2)).'-'.random_int(10,99),'note'=>$data['note']??null]);
-            foreach($locked as $line){$menu=$line['menu'];$item=$line['cart_item'];$order->items()->create(['menu_id'=>$menu->id,'menu_name'=>$menu->name,'quantity'=>$item->quantity,'price'=>$menu->price]);$menu->decrement('stock',$item->quantity);if($menu->stock <= $item->quantity)$menu->update(['status'=>'unavailable']);}
-            $order->payment()->create(['amount'=>$total,'status'=>'pending','expires_at'=>now()->addMinutes(30)]);
-            Notification::create(['user_id'=>$user->id,'type'=>'order','title'=>'Pesanan berhasil dibuat','message'=>"Pesanan {$order->order_number} di {$tenant->name} berhasil dibuat."]);
-            Notification::create(['user_id'=>$tenant->user_id,'type'=>'order','title'=>'Pesanan baru masuk','message'=>$user->name.' membuat pesanan '.$order->order_number.'.']);
-            $cart->items()->delete(); $cart->update(['tenant_id'=>null]);
+
+            // Waktu pengambilan otomatis: minimal 10 menit
+            // setelah pesanan dibuat.
+            $pickupTime = now()->addMinutes(10)->format('H:i');
+
+            $order = Order::create([
+                'order_number' => 'KG' . now()->format('ymdHis') . random_int(100, 999),
+                'user_id' => $user->id,
+                'tenant_id' => $tenant->id,
+                'total' => $total,
+                'status' => 'new',
+                'pickup_time' => $pickupTime,
+                'pickup_code' => strtoupper(
+                    substr(preg_replace('/\W/', '', $tenant->name), -2)
+                ) . '-' . random_int(10, 99),
+                'note' => $data['note'] ?? null,
+            ]);
+
+            foreach ($locked as $line) {
+                $menu = $line['menu'];
+                $item = $line['cart_item'];
+
+                $order->items()->create([
+                    'menu_id' => $menu->id,
+                    'menu_name' => $menu->name,
+                    'quantity' => $item->quantity,
+                    'price' => $menu->price,
+                ]);
+
+                $menu->decrement('stock', $item->quantity);
+
+                if ($menu->stock <= $item->quantity) {
+                    $menu->update(['status' => 'unavailable']);
+                }
+            }
+
+            $order->payment()->create([
+                'amount' => $total,
+                'status' => 'pending',
+                'expires_at' => now()->addMinutes(30),
+            ]);
+
+            Notification::create([
+                'user_id' => $user->id,
+                'type' => 'order',
+                'title' => 'Pesanan berhasil dibuat',
+                'message' => "Pesanan {$order->order_number} di {$tenant->name} berhasil dibuat.",
+            ]);
+
+            Notification::create([
+                'user_id' => $tenant->user_id,
+                'type' => 'order',
+                'title' => 'Pesanan baru masuk',
+                'message' => $user->name . ' membuat pesanan ' . $order->order_number . '.',
+            ]);
+
+            $cart->items()->delete();
+            $cart->update(['tenant_id' => null]);
+
             return $order;
         });
-        return redirect()->route('buyer.payment.show',$order)->with('status','Pesanan dibuat. Selesaikan pembayaran simulasi untuk meneruskan pesanan.');
+
+        return redirect()
+            ->route('buyer.payment.show', $order)
+            ->with(
+                'status',
+                'Pesanan dibuat. Selesaikan pembayaran simulasi untuk meneruskan pesanan.'
+            );
     }
 }
