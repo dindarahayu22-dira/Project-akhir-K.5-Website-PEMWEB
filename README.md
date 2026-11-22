@@ -235,6 +235,6 @@ Tabel-tabel yang digunakan harus mengikuti migration yang tersedia pada source c
 
 KantinGo dikembangkan sebagai proyek akhir kelompok untuk mata kuliah Praktikum Pemrograman Web. Fitur dan status pengujiannya perlu disesuaikan dengan implementasi serta hasil pengujian aktual.
 
-## 📄 Lisensi
+## 🧑‍🏫 Dosen Pengampu
 
-Proyek ini dikembangkan untuk keperluan akademik. Penggunaan dan distribusi source code mengikuti kesepakatan kelompok dan ketentuan institusi.
+Ir. Wibisono Sukmo Wardhono, S.T., M.T.
