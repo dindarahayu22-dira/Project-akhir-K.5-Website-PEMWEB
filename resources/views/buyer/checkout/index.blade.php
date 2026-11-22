@@ -155,6 +155,7 @@
 
     .figma-time-select {
         width: 100%;
+        min-width: 0;
         border: none;
         background: transparent;
         font-size: 13px;
@@ -313,8 +314,17 @@
 
 @section('content')
 @php
-    $cart = $cart ?? auth()->user()->cart?->load('tenant','items.menu');
-    $items = collect($cart?->items ?? [])->map(fn($item) => ['name'=>$item->menu?->name ?? 'Menu tidak tersedia','tenant'=>$cart?->tenant?->name ?? 'Kantin','quantity'=>(int)$item->quantity,'subtotal'=>(int)($item->menu?->price ?? 0)*(int)$item->quantity]);
+    $cart = $cart ?? auth()->user()->cart?->load('tenant', 'items.menu');
+
+    $items = collect($cart?->items ?? [])->map(function ($item) use ($cart) {
+        return [
+            'name' => $item->menu?->name ?? 'Menu tidak tersedia',
+            'tenant' => $cart?->tenant?->name ?? 'Kantin',
+            'quantity' => (int) $item->quantity,
+            'subtotal' => (int) ($item->menu?->price ?? 0) * (int) $item->quantity,
+        ];
+    });
+
     $menuCount = $items->count();
     $subtotal = $items->sum('subtotal');
     $totalBayar = $subtotal;
@@ -323,7 +333,9 @@
 
 <div class="figma-co-header">
     <h1 class="figma-co-title">Buat Pesanan</h1>
-    <p class="figma-co-subtitle">Atur waktu ambil dan catatan pesananmu.</p>
+    <p class="figma-co-subtitle">
+        Atur waktu ambil dan catatan pesananmu.
+    </p>
 </div>
 
 <div class="figma-co-steps">
@@ -375,9 +387,15 @@
             <div class="figma-canteen-box">
                 <div style="display:flex;align-items:center;gap:12px;">
                     <div class="figma-canteen-icon">&#127860;</div>
+
                     <div>
-                        <div style="font-size:13.5px;font-weight:700;color:#111827;">{{ $cart?->tenant?->name ?? 'Kantin' }}</div>
-                        <div style="font-size:11.5px;color:#6b7280;">Fakultas Ilmu Komputer, Lantai 1</div>
+                        <div style="font-size:13.5px;font-weight:700;color:#111827;">
+                            {{ $cart?->tenant?->name ?? 'Kantin' }}
+                        </div>
+
+                        <div style="font-size:11.5px;color:#6b7280;">
+                            Fakultas Ilmu Komputer, Lantai 1
+                        </div>
                     </div>
                 </div>
 
@@ -392,18 +410,22 @@
             </h2>
 
             <div class="figma-time-select-wrap">
-                <input
-                    type="text"
-                    name="pickup_time_display"
+                <select
+                    name="pickup_time"
+                    id="pickup_time"
                     class="figma-time-select"
-                    id="pickup_time_display"
-                    value="Minimal 10 menit setelah pesanan dibuat"
-                    readonly
+                    data-previous-value="{{ old('pickup_time') }}"
+                    required
                 >
-                <span class="figma-time-tag">Otomatis</span>
+                    <option value="">Pilih waktu pengambilan</option>
+                </select>
+
+                <span class="figma-time-tag">Min. 10 menit</span>
             </div>
 
-            <p class="figma-co-helper">Pesanan akan mulai dipersiapkan 10 menit sebelum waktu pengambilan.</p>
+            <p class="figma-co-helper">
+                Pilih waktu pengambilan minimal 10 menit setelah pemesanan.
+            </p>
         </div>
 
         <div class="figma-co-card">
@@ -412,9 +434,14 @@
                 <span>Catatan (opsional)</span>
             </h2>
 
-            <textarea id="figmaCoNotes" name="note" maxlength="150"
+            <textarea
+                id="figmaCoNotes"
+                name="note"
+                maxlength="150"
                 placeholder="Contoh: tanpa sambal, tanpa es"
-                class="figma-notes-textarea" oninput="updateNotesCounter()">{{ old('notes') }}</textarea>
+                class="figma-notes-textarea"
+                oninput="updateNotesCounter()"
+            >{{ old('note') }}</textarea>
 
             <div class="figma-notes-footer">
                 <span>Kantin akan berusaha menyesuaikan permintaanmu.</span>
@@ -425,19 +452,33 @@
 
     <div class="figma-summary-card">
         <div class="figma-summary-top">
-            <strong style="font-size:15px;font-weight:800;color:#111827;">Ringkasan pesanan</strong>
-            <span class="figma-menu-count-pill">{{ $menuCount }} Menu</span>
+            <strong style="font-size:15px;font-weight:800;color:#111827;">
+                Ringkasan pesanan
+            </strong>
+
+            <span class="figma-menu-count-pill">
+                {{ $menuCount }} Menu
+            </span>
         </div>
 
         @foreach ($items as $item)
             <div class="figma-summary-item">
                 <div style="display:flex;align-items:flex-start;gap:10px;">
-                    <span class="figma-qty-badge">{{ $item['quantity'] }}x</span>
+                    <span class="figma-qty-badge">
+                        {{ $item['quantity'] }}x
+                    </span>
+
                     <div>
-                        <div style="font-size:13px;font-weight:700;color:#111827;">{{ $item['name'] }}</div>
-                        <div style="font-size:11px;color:#6b7280;">{{ $item['tenant'] }}</div>
+                        <div style="font-size:13px;font-weight:700;color:#111827;">
+                            {{ $item['name'] }}
+                        </div>
+
+                        <div style="font-size:11px;color:#6b7280;">
+                            {{ $item['tenant'] }}
+                        </div>
                     </div>
                 </div>
+
                 <div style="font-size:13px;font-weight:700;color:#111827;white-space:nowrap;">
                     Rp {{ number_format($item['subtotal'], 0, ',', '.') }}
                 </div>
@@ -447,7 +488,10 @@
         <div class="figma-totals-box">
             <div class="figma-totals-line">
                 <span>Subtotal item</span>
-                <span style="color:#111827;font-weight:600;">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+
+                <span style="color:#111827;font-weight:600;">
+                    Rp {{ number_format($subtotal, 0, ',', '.') }}
+                </span>
             </div>
 
             <div class="figma-totals-line">
@@ -457,9 +501,15 @@
 
             <div class="figma-totals-final">
                 <div>
-                    <div style="font-size:13px;font-weight:700;color:#111827;">Total</div>
-                    <div style="font-size:10.5px;color:#6b7280;">Termasuk pajak</div>
+                    <div style="font-size:13px;font-weight:700;color:#111827;">
+                        Total
+                    </div>
+
+                    <div style="font-size:10.5px;color:#6b7280;">
+                        Termasuk pajak
+                    </div>
                 </div>
+
                 <div style="font-size:22px;font-weight:800;color:#ff6a00;">
                     Rp {{ number_format($totalBayar, 0, ',', '.') }}
                 </div>
@@ -480,11 +530,72 @@
 
 <script>
     function updateNotesCounter() {
-        const ta = document.getElementById('figmaCoNotes');
-        const cnt = document.getElementById('figmaNotesCount');
-        if (!ta || !cnt) return;
-        cnt.textContent = ta.value.length + '/150';
+        const textarea = document.getElementById('figmaCoNotes');
+        const counter = document.getElementById('figmaNotesCount');
+
+        if (!textarea || !counter) {
+            return;
+        }
+
+        counter.textContent = textarea.value.length + '/150';
     }
-    updateNotesCounter();
+
+    function populatePickupTimes() {
+        const select = document.getElementById('pickup_time');
+
+        if (!select) {
+            return;
+        }
+
+        // Ambil nilai lama dari atribut HTML, bukan sintaks Blade di JavaScript.
+        const previousValue = select.dataset.previousValue || '';
+
+        const now = new Date();
+
+        // Waktu pengambilan minimal 10 menit dari sekarang.
+        const minimum = new Date(now.getTime() + 10 * 60 * 1000);
+
+        // Bulatkan ke kelipatan 5 menit berikutnya.
+        minimum.setSeconds(0, 0);
+
+        const remainder = minimum.getMinutes() % 5;
+
+        if (remainder !== 0) {
+            minimum.setMinutes(
+                minimum.getMinutes() + (5 - remainder)
+            );
+        }
+
+        // Pilihan waktu dibatasi sampai akhir hari ini.
+        const endOfToday = new Date(now);
+        endOfToday.setHours(24, 0, 0, 0);
+
+        select.replaceChildren(
+            new Option('Pilih waktu pengambilan', '')
+        );
+
+        for (
+            let time = new Date(minimum);
+            time < endOfToday;
+            time.setMinutes(time.getMinutes() + 5)
+        ) {
+            const hours = String(time.getHours()).padStart(2, '0');
+            const minutes = String(time.getMinutes()).padStart(2, '0');
+            const value = hours + ':' + minutes;
+
+            const option = new Option(value, value);
+
+            if (value === previousValue) {
+                option.selected = true;
+            }
+
+            select.add(option);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        populatePickupTimes();
+        updateNotesCounter();
+    });
 </script>
 @endsection
