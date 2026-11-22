@@ -1,66 +1,240 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# KantinGo 🍽️
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Website Pemesanan Makanan dan Minuman Kantin Kampus**
 
-## About Laravel
+## 📖 Deskripsi Proyek
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+KantinGo adalah aplikasi berbasis web yang dikembangkan untuk mempermudah proses pemesanan makanan dan minuman di kantin kampus. Aplikasi ini memungkinkan pembeli melihat menu, melakukan pemesanan, dan memantau status pesanan. Penjual dapat mengelola informasi kantin, menu, pesanan masuk, serta riwayat transaksi.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Proyek ini dikembangkan sebagai tugas akhir kelompok mata kuliah Praktikum Pemrograman Web.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🎯 Tujuan
 
-## Learning Laravel
+- Mempermudah mahasiswa dalam memesan makanan dan minuman di kantin kampus.
+- Membantu penjual mengelola menu dan pesanan secara terstruktur.
+- Menyediakan informasi status pesanan dan pembayaran.
+- Meningkatkan efisiensi proses pemesanan makanan di lingkungan kampus.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## ✨ Fitur Utama
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 1. Fitur Umum
+- Login dan registrasi pengguna.
+- Pemilihan peran pengguna sebagai pembeli atau penjual.
+- Beranda pembeli.
+- Pengelolaan profil pengguna.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 2. Fitur Pembeli
+- Melihat daftar makanan dan minuman.
+- Melihat detail menu.
+- Menambahkan menu ke keranjang.
+- Mengatur jumlah dan menghapus item keranjang.
+- Melakukan checkout dan membuat pesanan.
+- Memilih metode pembayaran.
+- Melihat riwayat dan status pesanan.
+- Memberikan rating dan ulasan.
+- Melihat notifikasi.
 
-## Laravel Sponsors
+### 3. Fitur Penjual
+- Melihat dashboard penjual.
+- Mengelola informasi kantin.
+- Mengatur status buka atau tutup kantin.
+- Menambah, mengubah, dan menghapus menu.
+- Mengelola stok dan ketersediaan menu.
+- Melihat pesanan masuk dan detail pesanan.
+- Memperbarui status pesanan.
+- Melihat riwayat transaksi.
+- Melihat notifikasi.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+> **Catatan:** Pembayaran pada aplikasi ini berupa simulasi. Integrasi dengan penyedia layanan pembayaran atau payment gateway eksternal bukan bagian dari implementasi yang telah dikonfirmasi.
 
-### Premium Partners
+## 🛠️ Teknologi yang Digunakan
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+| Teknologi | Kegunaan |
+|---|---|
+| PHP 8.2 | Bahasa pemrograman sisi server |
+| Laravel 9 | Framework aplikasi web |
+| MySQL/MariaDB | Sistem manajemen basis data |
+| Blade | Template tampilan Laravel |
+| HTML | Struktur halaman web |
+| CSS | Pengaturan tampilan |
+| JavaScript | Interaksi pada halaman web |
+| Composer | Pengelolaan dependensi PHP |
+| Node.js dan NPM | Pengelolaan dependensi frontend jika diperlukan |
 
-## Contributing
+## 📋 Persyaratan Sistem
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Pastikan perangkat telah memiliki:
 
-## Code of Conduct
+- PHP 8.2 atau versi yang kompatibel dengan proyek.
+- Composer.
+- MySQL atau MariaDB.
+- Node.js dan NPM jika proyek menggunakan proses build aset frontend.
+- Web server lokal, seperti Laravel Herd atau alternatif yang kompatibel.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🚀 Instalasi dan Menjalankan Proyek
 
-## Security Vulnerabilities
+### 1. Clone atau siapkan source code
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Jika proyek tersedia di repositori Git:
 
-## License
+```bash
+git clone <URL_REPOSITORY>
+cd kantingo-app
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Jika menggunakan file ZIP, ekstrak proyek terlebih dahulu, kemudian buka terminal pada folder utama proyek.
+
+### 2. Instal dependensi PHP
+
+```bash
+composer install
+```
+
+### 3. Konfigurasi file environment
+
+Salin file `.env.example` menjadi `.env`.
+
+Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Kemudian buat application key:
+
+```bash
+php artisan key:generate
+```
+
+### 4. Konfigurasi database
+
+Buat database dengan nama `kantingo`, kemudian sesuaikan konfigurasi berikut pada file `.env`:
+
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=kantingo
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Sesuaikan username dan password dengan konfigurasi database lokal masing-masing. Jangan mengunggah file `.env` yang berisi kredensial pribadi ke repositori publik.
+
+### 5. Jalankan migration
+
+Untuk instalasi baru dengan database kosong:
+
+```bash
+php artisan migrate
+```
+
+Jika proyek memiliki seeder yang sudah diperiksa dan memang diperlukan:
+
+```bash
+php artisan db:seed
+```
+
+**Penting:** Jika database KantinGo sudah berisi data, jangan menggunakan `php artisan migrate:fresh` atau `php artisan db:wipe`, karena perintah tersebut dapat menghapus tabel dan data.
+
+### 6. Instal dependensi frontend
+
+Jika proyek menggunakan NPM:
+
+```bash
+npm install
+npm run build
+```
+
+### 7. Jalankan aplikasi
+
+```bash
+php artisan serve
+```
+
+Buka alamat berikut pada browser:
+
+```text
+http://127.0.0.1:8000
+```
+
+Jika menggunakan Laravel Herd, aplikasi juga dapat dijalankan melalui domain lokal yang telah dikonfigurasi.
+
+## 🗂️ Struktur Direktori
+
+```text
+kantingo-app/
+├── app/
+│   ├── Http/
+│   │   └── Controllers/
+│   └── Models/
+├── database/
+│   ├── migrations/
+│   └── seeders/
+├── resources/
+│   └── views/
+├── routes/
+│   └── web.php
+├── public/
+├── storage/
+├── tests/
+├── .env.example
+├── artisan
+├── composer.json
+└── README.md
+```
+
+Keterangan:
+
+- `app/Http/Controllers/` — menangani alur permintaan dan proses aplikasi.
+- `app/Models/` — merepresentasikan data dan relasi database.
+- `database/migrations/` — mendefinisikan struktur tabel database.
+- `database/seeders/` — menyediakan data awal jika diperlukan.
+- `resources/views/` — menyimpan tampilan Blade.
+- `routes/web.php` — mendefinisikan rute aplikasi.
+- `public/` — menyimpan aset publik aplikasi.
+- `tests/` — menyimpan pengujian aplikasi.
+
+## 🗄️ Database
+
+Database KantinGo digunakan untuk menyimpan data yang mendukung proses autentikasi, pengelolaan kantin, menu, keranjang, pemesanan, pembayaran, notifikasi, dan ulasan.
+
+Tabel-tabel yang digunakan harus mengikuti migration yang tersedia pada source code proyek. Contoh tabel inti meliputi:
+
+- `users` — data pengguna.
+- `tenants` — data kantin.
+- `categories` — kategori menu.
+- `menus` — data makanan dan minuman.
+- `carts` dan `cart_items` — data keranjang.
+- `orders` dan `order_items` — data pesanan.
+- `payments` — data pembayaran.
+- `notifications` — data notifikasi.
+- `reviews` — data ulasan.
+
+## 👥 Pembagian Tugas Anggota
+
+| Inisial | Anggota | Tanggung Jawab Utama |
+|---|---|---|
+| SK | Siti Kamila Nurhalisa | Pembayaran dan notifikasi |
+| DR | Dinda Rahayu Agustina | Riwayat pesanan pembeli dan ulasan |
+| LS | Louisa Safina Permata Citra | Detail makanan dan pengelolaan menu |
+| KR | Khaizuran Rafie Safaraz | Keranjang dan checkout |
+| PK | Petra Kanisia Braniva | Dashboard dan pengelolaan tenant |
+| BA | Billqisthi Albar Haprabu | Pesanan masuk, detail pesanan, dan riwayat transaksi |
+| ALL | Seluruh anggota | Login, register, home pembeli, dan profil |
+
+## 🔐 Keamanan
+
+- Autentikasi digunakan untuk membatasi akses pengguna.
+- Hak akses dibedakan berdasarkan peran pembeli dan penjual.
+- Validasi input digunakan untuk memeriksa data yang dikirimkan pengguna.
+- Kata sandi disimpan dalam bentuk hash.
+- File `.env` tidak boleh dibagikan karena dapat berisi informasi konfigurasi sensitif.
+
+## 📌 Status Proyek
+
+KantinGo dikembangkan sebagai proyek akhir kelompok untuk mata kuliah Praktikum Pemrograman Web. Fitur dan status pengujiannya perlu disesuaikan dengan implementasi serta hasil pengujian aktual.
+
+## 📄 Lisensi
+
+Proyek ini dikembangkan untuk keperluan akademik. Penggunaan dan distribusi source code mengikuti kesepakatan kelompok dan ketentuan institusi.
