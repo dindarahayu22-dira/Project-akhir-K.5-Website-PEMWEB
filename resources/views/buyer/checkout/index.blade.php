@@ -392,12 +392,15 @@
             </h2>
 
             <div class="figma-time-select-wrap">
-                <select name="pickup_time" class="figma-time-select">
-                    <option value="Hari ini, 12:30" selected>Hari ini, 12:30</option>
-                    <option value="Hari ini, 10:00">Hari ini, 10:00</option>
-                    <option value="Hari ini, 14:00">Hari ini, 14:00</option>
-                </select>
-                <span class="figma-time-tag">Sesuai istirahat</span>
+                <input
+                    type="text"
+                    name="pickup_time_display"
+                    class="figma-time-select"
+                    id="pickup_time_display"
+                    value="Minimal 10 menit setelah pesanan dibuat"
+                    readonly
+                >
+                <span class="figma-time-tag">Otomatis</span>
             </div>
 
             <p class="figma-co-helper">Pesanan akan mulai dipersiapkan 10 menit sebelum waktu pengambilan.</p>
