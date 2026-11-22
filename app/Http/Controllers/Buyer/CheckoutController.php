@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Http\Controllers\Buyer;
@@ -8,6 +9,7 @@ use App\Models\Order;
 use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class CheckoutController extends Controller
 {
@@ -31,6 +33,7 @@ class CheckoutController extends Controller
     public function store(Request $request, CartService $service)
     {
         $data = $request->validate([
+            'pickup_time' => ['required', 'date_format:H:i'],
             'note' => ['nullable', 'string', 'max:150'],
         ]);
 
@@ -44,6 +47,21 @@ class CheckoutController extends Controller
             422,
             'Keranjang kosong.'
         );
+
+        // Periksa waktu pilihan minimal 10 menit dari sekarang.
+        $now = now();
+        $minimumPickup = $now->copy()->addMinutes(10);
+        $selectedPickup = $now->copy()->setTimeFromTimeString(
+            $data['pickup_time']
+        );
+
+        if ($selectedPickup->lt($minimumPickup)) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'pickup_time' => 'Waktu pengambilan minimal 10 menit dari waktu pemesanan.',
+                ]);
+        }
 
         $order = DB::transaction(function () use ($cart, $data, $user) {
             $tenant = $cart->tenant()->lockForUpdate()->first();
@@ -79,17 +97,13 @@ class CheckoutController extends Controller
                 $total += (int) $menu->price * (int) $item->quantity;
             }
 
-            // Waktu pengambilan otomatis: minimal 10 menit
-            // setelah pesanan dibuat.
-            $pickupTime = now()->addMinutes(10)->format('H:i');
-
             $order = Order::create([
                 'order_number' => 'KG' . now()->format('ymdHis') . random_int(100, 999),
                 'user_id' => $user->id,
                 'tenant_id' => $tenant->id,
                 'total' => $total,
                 'status' => 'new',
-                'pickup_time' => $pickupTime,
+                'pickup_time' => $data['pickup_time'],
                 'pickup_code' => strtoupper(
                     substr(preg_replace('/\W/', '', $tenant->name), -2)
                 ) . '-' . random_int(10, 99),
