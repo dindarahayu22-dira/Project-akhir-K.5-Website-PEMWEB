@@ -71,6 +71,21 @@
         align-items: start;
     }
 
+    .pay-method-card {
+        background: #ffffff;
+        border: 1px solid #eef0f4;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+    }
+
+    .pay-section-title {
+        font-size: 18px;
+        font-weight: 800;
+        color: #111827;
+        margin: 0 0 10px;
+    }
+
     .pay-section-top {
         display: flex;
         align-items: center;
@@ -223,7 +238,9 @@
     }
 
     .pay-submit-btn {
+        display: block;
         width: 100%;
+        box-sizing: border-box;
         background: #ff6a00;
         color: #ffffff;
         border: none;
@@ -231,6 +248,8 @@
         padding: 13px 16px;
         font-size: 13.5px;
         font-weight: 700;
+        text-align: center;
+        text-decoration: none;
         cursor: pointer;
         box-shadow: 0 8px 18px rgba(255, 106, 0, 0.24);
     }
@@ -241,6 +260,8 @@
 
     .pay-cancel-link {
         display: block;
+        width: 100%;
+        box-sizing: border-box;
         text-align: center;
         margin-top: 10px;
         font-size: 12px;
@@ -271,22 +292,158 @@
 @endpush
 
 @section('content')
-<div class="pay-header"><h1 class="pay-title">Pembayaran</h1><p class="pay-subtitle">Konfirmasi pembayaran untuk meneruskan pesanan ke kantin.</p></div>
-@if(!$order || !$payment)
-<div class="pay-summary-card"><h3>Tidak ada pembayaran aktif</h3><p>Silakan buat pesanan dari menu yang tersedia terlebih dahulu.</p><a href="{{ route('buyer.menu.index') }}" class="pay-submit-btn">Cari menu</a></div>
-@else
-<div class="pay-grid">
- <div><div class="pay-method-card"><h2 class="pay-section-title">Pilih metode pembayaran</h2><p style="color:#6b7280;font-size:12px;">Ini adalah simulasi pembayaran untuk proyek praktikum. Tidak ada uang sungguhan yang ditarik.</p>
- <form method="POST" action="{{ route('buyer.payment.pay',$order) }}">@csrf
- <label style="display:block;margin:14px 0 6px;font-weight:700;">Metode</label><select name="method" required style="width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;background:#fff;"><option value="bank_transfer">Transfer Bank (simulasi)</option><option value="ewallet">E-Wallet (simulasi)</option><option value="virtual_account">Virtual Account (simulasi)</option><option value="cash">Bayar di Kantin</option></select>
- <div class="pay-pickup-box" style="margin-top:16px;"><div><strong>{{ $canteenName }}</strong><div style="font-size:12px;color:#6b7280;margin-top:4px;">Waktu ambil: {{ $pickupTime }} · Kode ambil: {{ $order->pickup_code }}</div>@if($notesText)<div style="font-size:12px;margin-top:4px;">Catatan: {{ $notesText }}</div>@endif</div></div>
- <button type="submit" class="pay-submit-btn" style="width:100%;border:0;cursor:pointer;margin-top:16px;">Konfirmasi pembayaran simulasi</button></form>
- <form method="POST" action="{{ route('buyer.payment.cancel',$order) }}" style="margin-top:10px;">@csrf<button type="submit" class="pay-cancel-link" style="border:0;background:transparent;cursor:pointer;">Batalkan pesanan</button></form>
- </div></div>
- <div><div class="pay-summary-card"><div class="pay-section-top"><strong>Ringkasan pesanan</strong><span class="pay-waiting-pill">{{ ucfirst($payment->status) }}</span></div><div style="font-size:12px;font-weight:700;color:#374151;margin:12px 0;">{{ $canteenName }} · #{{ $order->order_number }}</div>
- @foreach($items as $item)<div class="pay-item-row"><div><span class="pay-qty-box">{{ $item['quantity'] }}x</span> <strong>{{ $item['name'] }}</strong></div><strong>Rp {{ number_format($item['subtotal'],0,',','.') }}</strong></div>@endforeach
- <div class="pay-totals-box"><div style="display:flex;justify-content:space-between;border-top:1px solid #e5e7eb;padding-top:12px;font-weight:800;"><span>Total pembayaran</span><span>Rp {{ number_format($totalBayar,0,',','.') }}</span></div></div>
- </div></div>
+@php
+    $tenant = $order?->tenant;
+    $canteenName = $tenant?->name ?? 'Nama Kantin';
+@endphp
+
+<div class="pay-header">
+    <h1 class="pay-title">Pembayaran</h1>
+    <p class="pay-subtitle">
+        Konfirmasi pembayaran untuk meneruskan pesanan ke kantin.
+    </p>
 </div>
+
+@if(!$order || !$payment)
+    <div class="pay-summary-card">
+        <h3>Tidak ada pembayaran aktif</h3>
+        <p>
+            Silakan buat pesanan dari menu yang tersedia terlebih dahulu.
+        </p>
+        <a href="{{ route('buyer.menu.index') }}" class="pay-submit-btn">
+            Cari menu
+        </a>
+    </div>
+@else
+    <div class="pay-grid">
+        <div>
+            <div class="pay-method-card">
+                <h2 class="pay-section-title">Pilih metode pembayaran</h2>
+
+                <p style="color:#6b7280;font-size:12px;">
+                    Ini adalah simulasi pembayaran untuk proyek praktikum.
+                    Tidak ada uang sungguhan yang ditarik.
+                </p>
+
+                <form method="POST" action="{{ route('buyer.payment.pay', $order) }}">
+                    @csrf
+
+                    <label
+                        for="method"
+                        style="display:block;margin:14px 0 6px;font-weight:700;"
+                    >
+                        Metode
+                    </label>
+
+                    <select
+                        id="method"
+                        name="method"
+                        required
+                        style="width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;background:#fff;"
+                    >
+                        <option value="bank_transfer">
+                            Transfer Bank (simulasi)
+                        </option>
+                        <option value="ewallet">
+                            E-Wallet (simulasi)
+                        </option>
+                        <option value="virtual_account">
+                            Virtual Account (simulasi)
+                        </option>
+                        <option value="cash">
+                            Bayar di Kantin
+                        </option>
+                    </select>
+
+                    <div class="pay-pickup-box" style="margin-top:16px;">
+                        <div>
+                            <strong>{{ $canteenName }}</strong>
+
+                            <div style="font-size:12px;color:#6b7280;margin-top:4px;">
+                                Waktu ambil: {{ $pickupTime ?? '-' }}
+                                · Kode ambil: {{ $order->pickup_code ?? '-' }}
+                            </div>
+
+                            @if(!empty($notesText))
+                                <div style="font-size:12px;margin-top:4px;">
+                                    Catatan: {{ $notesText }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="pay-submit-btn"
+                        style="margin-top:16px;"
+                    >
+                        Konfirmasi pembayaran simulasi
+                    </button>
+                </form>
+
+                <form
+                    method="POST"
+                    action="{{ route('buyer.payment.cancel', $order) }}"
+                    style="margin-top:10px;"
+                >
+                    @csrf
+
+                    <button
+                        type="submit"
+                        class="pay-cancel-link"
+                        style="border:0;background:transparent;cursor:pointer;"
+                    >
+                        Batalkan pesanan
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <div class="pay-summary-card">
+                <div class="pay-section-top">
+                    <strong>Ringkasan pesanan</strong>
+
+                    <span class="pay-waiting-pill">
+                        {{ ucfirst($payment->status ?? 'menunggu') }}
+                    </span>
+                </div>
+
+                <div style="font-size:12px;font-weight:700;color:#374151;margin:12px 0;">
+                    {{ $canteenName }} · #{{ $order->order_number ?? $order->id }}
+                </div>
+
+                @forelse($items ?? [] as $item)
+                    <div class="pay-item-row">
+                        <div>
+                            <span class="pay-qty-box">
+                                {{ $item['quantity'] ?? 0 }}x
+                            </span>
+
+                            <strong>{{ $item['name'] ?? 'Menu' }}</strong>
+                        </div>
+
+                        <strong>
+                            Rp {{ number_format((float) ($item['subtotal'] ?? 0), 0, ',', '.') }}
+                        </strong>
+                    </div>
+                @empty
+                    <p style="font-size:13px;color:#6b7280;">
+                        Tidak ada rincian item pesanan.
+                    </p>
+                @endforelse
+
+                <div class="pay-totals-box">
+                    <div style="display:flex;justify-content:space-between;border-top:1px solid #e5e7eb;padding-top:12px;font-weight:800;gap:12px;">
+                        <span>Total pembayaran</span>
+
+                        <span>
+                            Rp {{ number_format((float) ($totalBayar ?? 0), 0, ',', '.') }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endif
 @endsection
